@@ -98,8 +98,10 @@ export class AppComponent implements OnInit {
       .pipe(
         map(response => {
           this.dataSubject.next(
-            { ...response, data:
-                { servers: this.dataSubject.value.data.servers.filter(s => s.id !== server.id) } }
+            {
+              ...response, data:
+                { servers: this.dataSubject.value.data.servers.filter(s => s.id !== server.id) }
+            }
           );
           return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
         }),
@@ -110,5 +112,17 @@ export class AppComponent implements OnInit {
       );
   }
 
+  printReport(): void {
+  //  window.print();
+    let dataType = 'application/vnd.ms-excel.sheet.macroEnabled.12';
+    let tableSelect = document.getElementById('servers');
+    let tableHtml = tableSelect.outerHTML.replace(/ /g, '%20');
+    let downloadLink = document.createElement('a');
+    document.body.appendChild(downloadLink);
+    downloadLink.href = 'data:' + dataType + ', ' + tableHtml;
+    downloadLink.download = 'server-report.xls';
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
 
 }
